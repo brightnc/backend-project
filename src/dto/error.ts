@@ -1,3 +1,3 @@
-export interface IError {
+export interface IErrorDTO {
   message: string;
 }
