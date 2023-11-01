@@ -4,6 +4,7 @@ import { IUserRepository } from "./repositories";
 import UserRepository from "./repositories/user";
 import { IUserHandler } from "./handlers";
 import UserHandler from "./handlers/user";
+import validateUserBody from "./middleware/validateUserBody";
 
 const app = express();
 const PORT = Number(process.env.PORT || 8800);
@@ -21,7 +22,7 @@ app.get("/", (req, res) => {
 
 app.use("/user", userRouter);
 
-userRouter.post("/", userHandler.registration);
+userRouter.post("/", validateUserBody(), userHandler.registration);
 
 app.listen(PORT, () => {
   console.log(`server is listening on port ${PORT}`);

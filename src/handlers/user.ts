@@ -1,3 +1,4 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { IUserHandler } from ".";
 import { IUserDTO } from "../dto/user";
 import { IUserRepository } from "../repositories";
@@ -25,9 +26,16 @@ export default class UserHandler implements IUserHandler {
 
       return res.status(201).json(userResponse).end();
     } catch (error) {
-      if (error instanceof Error) {
-        return res.status(400).json({ message: error.message }).end();
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === "P2002") {
+          return res
+            .status(400)
+            .json({ message: "username is already used" })
+            .end();
+        }
       }
+
+      return res.status(500).json({ message: "internal server error" });
     }
   };
 }
