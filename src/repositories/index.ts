@@ -1,5 +1,6 @@
 import { User } from "@prisma/client";
 import { ICreateUserDTO } from "../dto/user";
+import { IUpdateContentDTO } from "../dto/content";
 export interface IUser {
   id: string;
   username: string;
@@ -38,4 +39,11 @@ export interface IUserRepository {
 
 export interface IContentRepository {
   createContent(content: ICreateContent, ownerId: string): Promise<IContent>;
+  getAllContent(): Promise<IContent[]>;
+  getContentById(id: number): Promise<IContent>;
+  updateContent(
+    id: number,
+    updateContent: IUpdateContentDTO
+  ): Promise<IContent>;
+  deleteContent(id: number): Promise<IContent>;
 }

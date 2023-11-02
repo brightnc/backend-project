@@ -21,6 +21,11 @@ export interface IContentDTO {
   updatedAt: string;
 }
 
+export interface IUpdateContentDTO {
+  comment: string;
+  rating: number;
+}
+
 export const toContentDTO = (content: IContent): IContentDTO => {
   const contentDTO: IContentDTO = {
     id: content.id,

@@ -1,9 +1,13 @@
 import { RequestHandler } from "express";
-import { ICreateUserDTO, IUserDTO } from "../dto/user";
+import { ICreateUserDTO, IUserDTO, Id } from "../dto/user";
 import { IErrorDTO } from "../dto/error";
 import { ICredentialDTO, ILoginDTO } from "../dto/auth";
 import { AuthStatus } from "../middleware/jwt";
-import { IContentDTO, ICreateContentDTO } from "../dto/content";
+import {
+  IContentDTO,
+  ICreateContentDTO,
+  IUpdateContentDTO,
+} from "../dto/content";
 
 export interface IEmpty {}
 export interface IUserHandler {
@@ -26,4 +30,9 @@ export interface IContentHandler {
     unknown,
     AuthStatus
   >;
+
+  getAllContents: RequestHandler<IEmpty, IContentDTO[] | IErrorDTO>;
+  getContentById: RequestHandler<Id, IContentDTO | IErrorDTO>;
+  updateContent: RequestHandler<Id, IContentDTO | IErrorDTO, IUpdateContentDTO>;
+  deleteContent: RequestHandler<Id, IContentDTO | IErrorDTO>;
 }

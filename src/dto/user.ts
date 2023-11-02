@@ -1,5 +1,8 @@
 import { IUser } from "../repositories";
 
+export interface Id {
+  id: string;
+}
 export interface IUserDTO {
   id: string;
   username: string;
