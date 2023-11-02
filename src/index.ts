@@ -30,7 +30,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRouter);
-
 userRouter.post("/", userHandler.registration);
 
 app.use("/auth", authRouter);
@@ -39,7 +38,7 @@ authRouter.get("/me", jwtMiddleware.auth, userHandler.selfcheck);
 
 app.use("/content", contentRouter);
 contentRouter.post("/", jwtMiddleware.auth, contentHandler.createContent);
-contentRouter.get("/", contentHandler.getAllContents);
+contentRouter.get("/", contentHandler.getAllContent);
 contentRouter.get("/:id", contentHandler.getContentById);
 contentRouter.patch("/:id", jwtMiddleware.auth, contentHandler.updateContent);
 contentRouter.delete("/:id", jwtMiddleware.auth, contentHandler.deleteContent);

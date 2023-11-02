@@ -49,7 +49,7 @@ export default class ContentHandler implements IContentHandler {
     }
   };
 
-  getAllContents: IContentHandler["getAllContents"] = async (req, res) => {
+  getAllContent: IContentHandler["getAllContent"] = async (req, res) => {
     try {
       const result = await this.repo.getAllContent();
       const contentsResponse = result.map((content) => {
