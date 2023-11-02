@@ -5,8 +5,6 @@ import { IUserRepository } from "../repositories";
 import { hashPassword, verifyPassword } from "../utils/bcrypt";
 import { sign } from "jsonwebtoken";
 import { JWT_SECRET } from "../const";
-import { IErrorDTO } from "../dto/error";
-import { AuthStatus } from "../middleware/jwt";
 
 export default class UserHandler implements IUserHandler {
   private repo: IUserRepository;
@@ -16,6 +14,41 @@ export default class UserHandler implements IUserHandler {
 
   registration: IUserHandler["registration"] = async (req, res) => {
     const { name, username, password: plainPassword } = req.body;
+    if (typeof name !== "string") {
+      return res.status(400).json({ message: "name is not a string" }).end();
+    }
+    if (name.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "name cannot be empty string" })
+        .end();
+    }
+
+    if (typeof username !== "string") {
+      return res
+        .status(400)
+        .json({ message: "username is not a string" })
+        .end();
+    }
+    if (username.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "username cannot be empty string" })
+        .end();
+    }
+
+    if (typeof plainPassword !== "string") {
+      return res
+        .status(400)
+        .json({ message: "password is not a string" })
+        .end();
+    }
+    if (plainPassword.length === 0) {
+      return res
+        .status(400)
+        .json({ message: "password cannot be empty string" })
+        .end();
+    }
     try {
       const result = await this.repo.createUser({
         name,
