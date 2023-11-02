@@ -5,8 +5,6 @@ import { IUserRepository } from "../repositories";
 import { hashPassword, verifyPassword } from "../utils/bcrypt";
 import { sign } from "jsonwebtoken";
 import { JWT_SECRET } from "../const";
-import { IErrorDTO } from "../dto/error";
-import { AuthStatus } from "../middleware/jwt";
 
 export default class UserHandler implements IUserHandler {
   private repo: IUserRepository;

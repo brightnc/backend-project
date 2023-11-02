@@ -1,6 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import { IUser, IUserRepository } from ".";
-import { ICreateUserDTO, IUserDTO } from "../dto/user";
+import { ICreateUserDTO } from "../dto/user";
 
 export default class UserRepository implements IUserRepository {
   private prisma: PrismaClient;
