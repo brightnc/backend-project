@@ -3,6 +3,8 @@ import { IUserHandler } from ".";
 import { IUserDTO } from "../dto/user";
 import { IUserRepository } from "../repositories";
 import { hashPassword, verifyPassword } from "../utils/bcrypt";
+import { sign } from "jsonwebtoken";
+import { JWT_SECRET } from "../const";
 
 export default class UserHandler implements IUserHandler {
   private repo: IUserRepository;
@@ -35,21 +37,38 @@ export default class UserHandler implements IUserHandler {
         }
       }
 
-      return res.status(500).json({ message: "internal server error" });
+      return res.status(500).json({ message: "internal server error" }).end();
     }
   };
 
   login: IUserHandler["login"] = async (req, res) => {
     const { username, password: plainPassword } = req.body;
     try {
-      const result = await this.repo.findByUsername(username);
+      const { id, password } = await this.repo.findByUsername(username);
+      if (!verifyPassword(plainPassword, password)) {
+        throw new Error("invalid username or password");
+      }
+      const accessToken = sign({ id }, JWT_SECRET, {
+        algorithm: "HS512",
+        expiresIn: "12h",
+        issuer: "learnhub-api",
+        subject: "user-credential",
+      });
+
+      return res.status(200).json({ accessToken: accessToken }).end();
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === "P2025") {
-          return res.status(400).json({ message: "user not found" }).end();
+          return res
+            .status(400)
+            .json({ message: "invalid username or password" })
+            .end();
         }
       }
-      return res.status(500).json({ message: "internal server error" });
+      if (error instanceof Error) {
+        return res.status(400).json({ message: error.message }).end();
+      }
+      return res.status(500).json({ message: "internal server error" }).end();
     }
   };
 }

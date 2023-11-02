@@ -15,6 +15,7 @@ const userHandler: IUserHandler = new UserHandler(userRepo);
 
 app.use(express.json());
 const userRouter = express.Router();
+const authRouter = express.Router();
 
 app.get("/", (req, res) => {
   return res.status(200).send("Hello world").end();
@@ -23,6 +24,9 @@ app.get("/", (req, res) => {
 app.use("/user", userRouter);
 
 userRouter.post("/", validateUserBody(), userHandler.registration);
+
+app.use("/auth", authRouter);
+authRouter.post("/login", userHandler.login);
 
 app.listen(PORT, () => {
   console.log(`server is listening on port ${PORT}`);
