@@ -33,6 +33,18 @@ export interface IContentHandler {
 
   getAllContents: RequestHandler<IEmpty, IContentDTO[] | IErrorDTO>;
   getContentById: RequestHandler<Id, IContentDTO | IErrorDTO>;
-  updateContent: RequestHandler<Id, IContentDTO | IErrorDTO, IUpdateContentDTO>;
-  deleteContent: RequestHandler<Id, IContentDTO | IErrorDTO>;
+  updateContent: RequestHandler<
+    Id,
+    IContentDTO | IErrorDTO,
+    IUpdateContentDTO,
+    unknown,
+    AuthStatus
+  >;
+  deleteContent: RequestHandler<
+    Id,
+    IContentDTO | IErrorDTO,
+    unknown,
+    unknown,
+    AuthStatus
+  >;
 }
