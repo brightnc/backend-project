@@ -114,7 +114,7 @@ export default class UserHandler implements IUserHandler {
       return res.status(201).json(userResponse).end();
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "internal server error" });
+      return res.status(500).json({ message: "internal server error" }).end();
     }
   };
 }

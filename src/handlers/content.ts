@@ -40,12 +40,12 @@ export default class ContentHandler implements IContentHandler {
     } catch (error) {
       console.log(error);
       if (error instanceof PrismaClientValidationError) {
-        return res.status(400).json({ message: "missing field" });
+        return res.status(400).json({ message: "missing field" }).end();
       }
       if (error instanceof Error) {
         return res.status(400).json({ message: error.message }).end();
       }
-      return res.status(500).json({ message: "internal server error" });
+      return res.status(500).json({ message: "internal server error" }).end();
     }
   };
 
@@ -59,7 +59,7 @@ export default class ContentHandler implements IContentHandler {
     } catch (error) {
       console.error(error);
 
-      return res.status(500).json({ message: "internal server error" }).end;
+      return res.status(500).json({ message: "internal server error" }).end();
     }
   };
 
@@ -72,7 +72,7 @@ export default class ContentHandler implements IContentHandler {
     } catch (error) {
       console.error(error);
 
-      return res.status(500).json({ message: "internal server error" }).end;
+      return res.status(500).json({ message: "internal server error" }).end();
     }
   };
 
@@ -113,7 +113,7 @@ export default class ContentHandler implements IContentHandler {
         return res.status(403).json({ message: error.message }).end();
       }
 
-      return res.status(500).json({ message: "internal server error" }).end;
+      return res.status(500).json({ message: "internal server error" }).end();
     }
   };
 
@@ -139,7 +139,7 @@ export default class ContentHandler implements IContentHandler {
         return res.status(403).json({ message: error.message }).end();
       }
 
-      return res.status(500).json({ message: "internal server error" }).end;
+      return res.status(500).json({ message: "internal server error" }).end();
     }
   };
 }
