@@ -2,7 +2,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { IUserHandler } from ".";
 import { IUserDTO } from "../dto/user";
 import { IUserRepository } from "../repositories";
-import { hashPassword } from "../utils/bcrypt";
+import { hashPassword, verifyPassword } from "../utils/bcrypt";
 
 export default class UserHandler implements IUserHandler {
   private repo: IUserRepository;
@@ -11,12 +11,12 @@ export default class UserHandler implements IUserHandler {
   }
 
   registration: IUserHandler["registration"] = async (req, res) => {
-    const { name, username, password } = req.body;
+    const { name, username, password: plainPassword } = req.body;
     try {
       const result = await this.repo.createUser({
         name,
         username,
-        password: hashPassword(password),
+        password: hashPassword(plainPassword),
       });
 
       const userResponse: IUserDTO = {
@@ -35,6 +35,20 @@ export default class UserHandler implements IUserHandler {
         }
       }
 
+      return res.status(500).json({ message: "internal server error" });
+    }
+  };
+
+  login: IUserHandler["login"] = async (req, res) => {
+    const { username, password: plainPassword } = req.body;
+    try {
+      const result = await this.repo.findByUsername(username);
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === "P2025") {
+          return res.status(400).json({ message: "user not found" }).end();
+        }
+      }
       return res.status(500).json({ message: "internal server error" });
     }
   };

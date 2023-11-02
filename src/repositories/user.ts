@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import { IUser, IUserRepository } from ".";
 import { ICreateUserDTO, IUserDTO } from "../dto/user";
 
@@ -16,6 +16,11 @@ export default class UserRepository implements IUserRepository {
         username: true,
         registeredAt: true,
       },
+    });
+  }
+  findByUsername(username: string): Promise<User> {
+    return this.prisma.user.findUniqueOrThrow({
+      where: { username },
     });
   }
 }
