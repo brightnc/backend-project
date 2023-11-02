@@ -1,10 +1,12 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { IUserHandler } from ".";
-import { IUserDTO } from "../dto/user";
+import { IUserDTO, toUserDTO } from "../dto/user";
 import { IUserRepository } from "../repositories";
 import { hashPassword, verifyPassword } from "../utils/bcrypt";
 import { sign } from "jsonwebtoken";
 import { JWT_SECRET } from "../const";
+import { IErrorDTO } from "../dto/error";
+import { AuthStatus } from "../middleware/jwt";
 
 export default class UserHandler implements IUserHandler {
   private repo: IUserRepository;
@@ -21,10 +23,7 @@ export default class UserHandler implements IUserHandler {
         password: hashPassword(plainPassword),
       });
 
-      const userResponse: IUserDTO = {
-        ...result,
-        registeredAt: result.registeredAt.toUTCString(),
-      };
+      const userResponse: IUserDTO = toUserDTO(result);
 
       return res.status(201).json(userResponse).end();
     } catch (error) {
@@ -69,6 +68,20 @@ export default class UserHandler implements IUserHandler {
         return res.status(400).json({ message: error.message }).end();
       }
       return res.status(500).json({ message: "internal server error" }).end();
+    }
+  };
+
+  selfcheck: IUserHandler["selfcheck"] = async (req, res) => {
+    try {
+      const id = res.locals.user.id;
+
+      const result = await this.repo.findById(id);
+
+      const userResponse: IUserDTO = toUserDTO(result);
+      return res.status(201).json(userResponse).end();
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "internal server error" });
     }
   };
 }

@@ -18,9 +18,22 @@ export default class UserRepository implements IUserRepository {
       },
     });
   }
+
   findByUsername(username: string): Promise<User> {
     return this.prisma.user.findUniqueOrThrow({
       where: { username },
+    });
+  }
+
+  findById(id: string): Promise<IUser> {
+    return this.prisma.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        registeredAt: true,
+      },
+      where: { id },
     });
   }
 }
