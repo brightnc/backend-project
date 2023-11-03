@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { IContent, IContentRepository, ICreateContent } from ".";
 import { IUpdateContentDTO } from "../dto/content";
+import { CONTENT_SELECT } from "../const";
 
 export default class ContentRepository implements IContentRepository {
   private prisma: PrismaClient;
@@ -16,77 +17,20 @@ export default class ContentRepository implements IContentRepository {
           connect: { id: userId },
         },
       },
-      select: {
-        id: true,
-        comment: true,
-        videoUrl: true,
-        videoTitle: true,
-        thumbnailUrl: true,
-        creatorUrl: true,
-        creatorName: true,
-        rating: true,
-        createdAt: true,
-        updatedAt: true,
-        User: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            registeredAt: true,
-          },
-        },
-      },
+      select: CONTENT_SELECT,
     });
   }
 
   getAllContent(): Promise<IContent[]> {
     return this.prisma.content.findMany({
-      select: {
-        id: true,
-        comment: true,
-        videoUrl: true,
-        videoTitle: true,
-        thumbnailUrl: true,
-        creatorUrl: true,
-        creatorName: true,
-        rating: true,
-        createdAt: true,
-        updatedAt: true,
-        User: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            registeredAt: true,
-          },
-        },
-      },
+      select: CONTENT_SELECT,
     });
   }
 
   getContentById(id: number): Promise<IContent> {
     return this.prisma.content.findUniqueOrThrow({
       where: { id },
-      select: {
-        id: true,
-        comment: true,
-        videoUrl: true,
-        videoTitle: true,
-        thumbnailUrl: true,
-        creatorUrl: true,
-        creatorName: true,
-        rating: true,
-        createdAt: true,
-        updatedAt: true,
-        User: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            registeredAt: true,
-          },
-        },
-      },
+      select: CONTENT_SELECT,
     });
   }
 
@@ -98,52 +42,14 @@ export default class ContentRepository implements IContentRepository {
     return this.prisma.content.update({
       where: { id },
       data: { ...updateContent, updatedAt: now },
-      select: {
-        id: true,
-        comment: true,
-        videoUrl: true,
-        videoTitle: true,
-        thumbnailUrl: true,
-        creatorUrl: true,
-        creatorName: true,
-        rating: true,
-        createdAt: true,
-        updatedAt: true,
-        User: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            registeredAt: true,
-          },
-        },
-      },
+      select: CONTENT_SELECT,
     });
   }
 
   deleteContent(id: number): Promise<IContent> {
     return this.prisma.content.delete({
       where: { id },
-      select: {
-        id: true,
-        comment: true,
-        videoUrl: true,
-        videoTitle: true,
-        thumbnailUrl: true,
-        creatorUrl: true,
-        creatorName: true,
-        rating: true,
-        createdAt: true,
-        updatedAt: true,
-        User: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            registeredAt: true,
-          },
-        },
-      },
+      select: CONTENT_SELECT,
     });
   }
 }
