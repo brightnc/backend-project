@@ -34,7 +34,7 @@ userRouter.post("/", userHandler.registration);
 
 app.use("/auth", authRouter);
 authRouter.post("/login", userHandler.login);
-authRouter.get("/me", jwtMiddleware.auth, userHandler.selfcheck);
+authRouter.get("/me", jwtMiddleware.auth, userHandler.getPeosonalInfo);
 
 app.use("/content", contentRouter);
 contentRouter.post("/", jwtMiddleware.auth, contentHandler.createContent);

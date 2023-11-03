@@ -1,6 +1,5 @@
 export interface OEmbedResponseDto {
   url: string;
-  error: string;
   thumbnail_height: number;
   version: string;
   width: number;
@@ -21,4 +20,9 @@ export interface OEmbedData {
   thumbnail_url: string;
   author_name: string;
   author_url: string;
+}
+
+export interface OEmbedError {
+  url: string;
+  error: string;
 }

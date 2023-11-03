@@ -104,7 +104,7 @@ export default class UserHandler implements IUserHandler {
     }
   };
 
-  selfcheck: IUserHandler["selfcheck"] = async (req, res) => {
+  getPeosonalInfo: IUserHandler["getPeosonalInfo"] = async (req, res) => {
     try {
       const id = res.locals.user.id;
 
