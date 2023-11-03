@@ -27,15 +27,9 @@ export interface IUpdateContentDTO {
 }
 
 export const toContentDTO = (content: IContent): IContentDTO => {
+  const { User, createdAt, updatedAt, ...otherInfo } = content;
   const contentDTO: IContentDTO = {
-    id: content.id,
-    videoTitle: content.videoTitle,
-    videoUrl: content.videoUrl,
-    comment: content.comment,
-    rating: content.rating,
-    thumbnailUrl: content.thumbnailUrl,
-    creatorName: content.creatorName,
-    creatorUrl: content.creatorUrl,
+    ...otherInfo,
     postedBy: toUserDTO(content.User),
     createdAt: content.createdAt.toISOString(),
     updatedAt: content.updatedAt.toISOString(),

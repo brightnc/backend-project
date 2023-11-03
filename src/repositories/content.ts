@@ -16,7 +16,17 @@ export default class ContentRepository implements IContentRepository {
           connect: { id: userId },
         },
       },
-      include: {
+      select: {
+        id: true,
+        comment: true,
+        videoUrl: true,
+        videoTitle: true,
+        thumbnailUrl: true,
+        creatorUrl: true,
+        creatorName: true,
+        rating: true,
+        createdAt: true,
+        updatedAt: true,
         User: {
           select: {
             id: true,
@@ -31,7 +41,17 @@ export default class ContentRepository implements IContentRepository {
 
   getAllContent(): Promise<IContent[]> {
     return this.prisma.content.findMany({
-      include: {
+      select: {
+        id: true,
+        comment: true,
+        videoUrl: true,
+        videoTitle: true,
+        thumbnailUrl: true,
+        creatorUrl: true,
+        creatorName: true,
+        rating: true,
+        createdAt: true,
+        updatedAt: true,
         User: {
           select: {
             id: true,
@@ -47,7 +67,17 @@ export default class ContentRepository implements IContentRepository {
   getContentById(id: number): Promise<IContent> {
     return this.prisma.content.findUniqueOrThrow({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        comment: true,
+        videoUrl: true,
+        videoTitle: true,
+        thumbnailUrl: true,
+        creatorUrl: true,
+        creatorName: true,
+        rating: true,
+        createdAt: true,
+        updatedAt: true,
         User: {
           select: {
             id: true,
@@ -68,7 +98,17 @@ export default class ContentRepository implements IContentRepository {
     return this.prisma.content.update({
       where: { id },
       data: { ...updateContent, updatedAt: now },
-      include: {
+      select: {
+        id: true,
+        comment: true,
+        videoUrl: true,
+        videoTitle: true,
+        thumbnailUrl: true,
+        creatorUrl: true,
+        creatorName: true,
+        rating: true,
+        createdAt: true,
+        updatedAt: true,
         User: {
           select: {
             id: true,
@@ -84,7 +124,17 @@ export default class ContentRepository implements IContentRepository {
   deleteContent(id: number): Promise<IContent> {
     return this.prisma.content.delete({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        comment: true,
+        videoUrl: true,
+        videoTitle: true,
+        thumbnailUrl: true,
+        creatorUrl: true,
+        creatorName: true,
+        rating: true,
+        createdAt: true,
+        updatedAt: true,
         User: {
           select: {
             id: true,

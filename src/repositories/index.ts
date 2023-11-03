@@ -19,7 +19,6 @@ export interface IContent {
   createdAt: Date;
   updatedAt: Date;
   User: IUser;
-  ownerId: string;
 }
 
 export interface ICreateContent {
