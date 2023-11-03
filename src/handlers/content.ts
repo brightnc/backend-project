@@ -5,6 +5,7 @@ import {
 import { IContentHandler } from ".";
 import { IContentDTO, toContentDTO } from "../dto/content";
 import { IContentRepository, ICreateContent } from "../repositories";
+import { oEmbed } from "../utils/oembed";
 
 export default class ContentHandler implements IContentHandler {
   private repo: IContentRepository;
@@ -25,14 +26,18 @@ export default class ContentHandler implements IContentHandler {
       if (rating < 0 || rating > 5 || typeof rating !== "number") {
         throw new Error("invalid rating");
       }
+      const { author_name, author_url, thumbnail_url, title } = await oEmbed(
+        videoUrl
+      );
+
       const createContentData: ICreateContent = {
         videoUrl,
         comment,
         rating,
-        creatorName: "",
-        creatorUrl: "",
-        thumbnailUrl: "",
-        videoTitle: "",
+        creatorName: author_name,
+        creatorUrl: author_url,
+        thumbnailUrl: thumbnail_url,
+        videoTitle: title,
       };
       const result = await this.repo.createContent(createContentData, id);
       const contentResponse: IContentDTO = toContentDTO(result);

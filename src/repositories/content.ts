@@ -64,9 +64,10 @@ export default class ContentRepository implements IContentRepository {
     id: number,
     updateContent: IUpdateContentDTO
   ): Promise<IContent> {
+    const now = new Date().toISOString();
     return this.prisma.content.update({
       where: { id },
-      data: updateContent,
+      data: { ...updateContent, updatedAt: now },
       include: {
         User: {
           select: {
