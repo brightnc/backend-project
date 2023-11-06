@@ -21,6 +21,10 @@ export interface IContentDTO {
   updatedAt: string;
 }
 
+export interface IContentsDTO {
+  data: IContentDTO[];
+}
+
 export interface IUpdateContentDTO {
   comment: string;
   rating: number;

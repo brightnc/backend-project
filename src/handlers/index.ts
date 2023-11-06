@@ -5,6 +5,7 @@ import { ICredentialDTO, ILoginDTO } from "../dto/auth";
 import { AuthStatus } from "../middleware/jwt";
 import {
   IContentDTO,
+  IContentsDTO,
   ICreateContentDTO,
   IUpdateContentDTO,
 } from "../dto/content";
@@ -31,7 +32,7 @@ export interface IContentHandler {
     AuthStatus
   >;
 
-  getAllContent: RequestHandler<IEmpty, IContentDTO[] | IErrorDTO>;
+  getAllContent: RequestHandler<IEmpty, IContentsDTO | IErrorDTO>;
   getContentById: RequestHandler<Id, IContentDTO | IErrorDTO>;
   updateContent: RequestHandler<
     Id,

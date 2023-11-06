@@ -60,7 +60,7 @@ export default class ContentHandler implements IContentHandler {
       const contentsResponse = result.map((content) => {
         return toContentDTO(content);
       });
-      return res.status(200).json(contentsResponse).end();
+      return res.status(200).json({ data: contentsResponse }).end();
     } catch (error) {
       console.error(error);
 
