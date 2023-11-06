@@ -71,12 +71,17 @@ export default class ContentHandler implements IContentHandler {
   getContentById: IContentHandler["getContentById"] = async (req, res) => {
     try {
       const id = Number(req.params.id);
+      if (isNaN(id)) {
+        throw new Error("id is invalid");
+      }
       const result = await this.repo.getContentById(id);
       const contentResponse = toContentDTO(result);
       return res.status(200).json(contentResponse).end();
     } catch (error) {
       console.error(error);
-
+      if (error instanceof Error) {
+        return res.status(400).json({ message: error.message }).end();
+      }
       return res.status(500).json({ message: "internal server error" }).end();
     }
   };
@@ -85,6 +90,9 @@ export default class ContentHandler implements IContentHandler {
     try {
       const userId = res.locals.user.id;
       const contentId = Number(req.params.id);
+      if (isNaN(contentId)) {
+        throw new Error("id is invalid");
+      }
       const { comment, rating } = req.body;
       if (comment === undefined || typeof comment !== "string") {
         throw new Error("invalid comment");
@@ -126,6 +134,9 @@ export default class ContentHandler implements IContentHandler {
     try {
       const userId = res.locals.user.id;
       const contentId = Number(req.params.id);
+      if (isNaN(contentId)) {
+        throw new Error("id is invalid");
+      }
       const result = await this.repo.deleteContent(contentId);
       if (userId !== result.User.id) {
         throw new Error("cannot delete content");

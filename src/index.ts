@@ -30,6 +30,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRouter);
+userRouter.get("/:username", userHandler.getUserByUsername);
 userRouter.post("/", userHandler.registration);
 
 app.use("/auth", authRouter);

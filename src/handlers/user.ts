@@ -117,4 +117,17 @@ export default class UserHandler implements IUserHandler {
       return res.status(500).json({ message: "internal server error" }).end();
     }
   };
+
+  getUserByUsername: IUserHandler["getUserByUsername"] = async (req, res) => {
+    try {
+      const result = await this.repo.findByUsername(req.params.username);
+      const userResponse = toUserDTO(result);
+      return res.status(200).json(userResponse).end();
+    } catch (error) {
+      if (error instanceof Error) {
+        return res.status(400).json({ message: error.message }).end();
+      }
+      return res.status(500).json({ message: "internal server error" }).end();
+    }
+  };
 }

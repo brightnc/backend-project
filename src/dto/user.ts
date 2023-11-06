@@ -1,7 +1,10 @@
 import { IUser } from "../repositories";
 
-export interface Id {
+export interface IdParam {
   id: string;
+}
+export interface usernameParam {
+  username: string;
 }
 export interface IUserDTO {
   id: string;
@@ -17,9 +20,12 @@ export interface ICreateUserDTO {
 }
 
 export const toUserDTO = (user: IUser): IUserDTO => {
+  const { id, name, registeredAt, username } = user;
   const userDTO: IUserDTO = {
-    ...user,
-    registeredAt: user.registeredAt.toISOString(),
+    id,
+    name,
+    username,
+    registeredAt: registeredAt.toISOString(),
   };
 
   return userDTO;
