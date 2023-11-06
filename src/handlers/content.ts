@@ -105,18 +105,22 @@ export default class ContentHandler implements IContentHandler {
       ) {
         throw new Error("invalid rating");
       }
+      const { User } = await this.repo.getContentById(contentId);
+      if (userId !== User.id) {
+        throw new Error("cannot update content");
+      }
       const result = await this.repo.updateContent(contentId, {
         comment,
         rating,
       });
-      if (userId !== result.User.id) {
-        throw new Error("cannot update content");
-      }
       const contentResponse = toContentDTO(result);
       return res.status(200).json(contentResponse).end();
     } catch (error) {
       console.error(error);
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === "P2025"
+      ) {
         return res
           .status(400)
           .json({ message: "content does not exist" })
@@ -137,15 +141,19 @@ export default class ContentHandler implements IContentHandler {
       if (isNaN(contentId)) {
         throw new Error("id is invalid");
       }
-      const result = await this.repo.deleteContent(contentId);
-      if (userId !== result.User.id) {
+      const { User } = await this.repo.getContentById(contentId);
+      if (userId !== User.id) {
         throw new Error("cannot delete content");
       }
+      const result = await this.repo.deleteContent(contentId);
       const contentResponse = toContentDTO(result);
       return res.status(200).json(contentResponse).end();
     } catch (error) {
       console.error(error);
-      if (error instanceof PrismaClientKnownRequestError) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === "P2025"
+      ) {
         return res
           .status(400)
           .json({ message: "content does not exist" })
