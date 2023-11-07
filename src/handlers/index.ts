@@ -14,6 +14,7 @@ export interface IEmpty {}
 export interface IUserHandler {
   registration: RequestHandler<IEmpty, IUserDTO | IErrorDTO, ICreateUserDTO>;
   login: RequestHandler<IEmpty, ICredentialDTO | IErrorDTO, ILoginDTO>;
+  logout: RequestHandler<IEmpty, IErrorDTO, undefined, undefined, AuthStatus>;
   getPeosonalInfo: RequestHandler<
     IEmpty,
     IUserDTO | IErrorDTO,

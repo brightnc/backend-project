@@ -106,6 +106,23 @@ export default class UserHandler implements IUserHandler {
     }
   };
 
+  logout: IUserHandler["logout"] = async (req, res) => {
+    try {
+      const { token, expire } = res.locals.user;
+      const expireBigInt = BigInt(expire);
+      const result = await this.repo.addInvalidToken({
+        token,
+        expire_epoch_timestamp: expireBigInt,
+      });
+      console.log(result);
+
+      return res.status(200).end();
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "internal server error" }).end();
+    }
+  };
+
   getPeosonalInfo: IUserHandler["getPeosonalInfo"] = async (req, res) => {
     try {
       const id = res.locals.user.id;

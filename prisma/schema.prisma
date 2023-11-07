@@ -33,3 +33,8 @@ model Content {
   User         User     @relation(fields: [ownerId], references: [id])
   ownerId      String   @db.Uuid
 }
+
+model BlackListToken {
+  token                  String @id @db.VarChar()
+  expire_epoch_timestamp BigInt @db.BigInt
+}

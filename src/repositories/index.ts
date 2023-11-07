@@ -30,10 +30,17 @@ export interface ICreateContent {
   creatorUrl: string;
   thumbnailUrl: string;
 }
+
+export interface IToken {
+  token: string;
+  expire_epoch_timestamp: bigint;
+}
 export interface IUserRepository {
   createUser(user: ICreateUserDTO): Promise<IUser>;
   findByUsername(username: string): Promise<User>;
   findById(id: string): Promise<IUser>;
+  addInvalidToken(token: IToken): Promise<IToken>;
+  getInvalidToken(token: string): Promise<IToken | null>;
 }
 
 export interface IContentRepository {
