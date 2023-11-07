@@ -110,11 +110,10 @@ export default class UserHandler implements IUserHandler {
     try {
       const { token, expire } = res.locals.user;
       const expireBigInt = BigInt(expire);
-      const result = await this.repo.addInvalidToken({
+      await this.repo.addInvalidToken({
         token,
         expire_epoch_timestamp: expireBigInt,
       });
-      console.log(result);
 
       return res.status(200).end();
     } catch (error) {
@@ -123,7 +122,7 @@ export default class UserHandler implements IUserHandler {
     }
   };
 
-  getPeosonalInfo: IUserHandler["getPeosonalInfo"] = async (req, res) => {
+  getPersonalInfo: IUserHandler["getPersonalInfo"] = async (req, res) => {
     try {
       const id = res.locals.user.id;
 
