@@ -24,6 +24,9 @@ export default class ContentRepository implements IContentRepository {
   getAllContent(): Promise<IContent[]> {
     return this.prisma.content.findMany({
       select: CONTENT_SELECT,
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   }
 

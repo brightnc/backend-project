@@ -129,7 +129,7 @@ export default class UserHandler implements IUserHandler {
       const result = await this.repo.findById(id);
 
       const userResponse: IUserDTO = toUserDTO(result);
-      return res.status(201).json(userResponse).end();
+      return res.status(200).json(userResponse).end();
     } catch (error) {
       console.error(error);
       if (
