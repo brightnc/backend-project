@@ -1,25 +1,41 @@
 import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
-import { IContentRepository, IUserRepository } from "./repositories";
+import {
+  IBlacklistRepository,
+  IContentRepository,
+  IUserRepository,
+} from "./repositories";
 import UserRepository from "./repositories/user";
 import { IContentHandler, IUserHandler } from "./handlers";
 import UserHandler from "./handlers/user";
 import JWTMiddleware from "./middleware/jwt";
 import ContentRepository from "./repositories/content";
 import ContentHandler from "./handlers/content";
+import { RedisClientType, createClient } from "redis";
+import BlacklistRepository from "./repositories/blacklist";
 
 const app = express();
 const PORT = Number(process.env.PORT || 8800);
 
 const client = new PrismaClient();
+const redisClient: RedisClientType = createClient();
+redisClient.on("ready", function () {
+  console.log("Connected to Redis server successfully");
+});
+
+//Blacklist
+const blacklistRepo: IBlacklistRepository = new BlacklistRepository(
+  redisClient
+);
 // User
 const userRepo: IUserRepository = new UserRepository(client);
-const userHandler: IUserHandler = new UserHandler(userRepo);
+const userHandler: IUserHandler = new UserHandler(userRepo, blacklistRepo);
 // Content
 const contentRepo: IContentRepository = new ContentRepository(client);
 const contentHandler: IContentHandler = new ContentHandler(contentRepo);
-const jwtMiddleware = new JWTMiddleware(userRepo);
+
+const jwtMiddleware = new JWTMiddleware(blacklistRepo);
 
 app.use(cors());
 app.use(express.json());
@@ -47,6 +63,27 @@ contentRouter.get("/:id", contentHandler.getContentById);
 contentRouter.patch("/:id", jwtMiddleware.auth, contentHandler.updateContent);
 contentRouter.delete("/:id", jwtMiddleware.auth, contentHandler.deleteContent);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
+  redisClient.connect();
   console.log(`server is listening on port ${PORT}`);
 });
+
+process.on("SIGTERM", shutDown);
+process.on("SIGINT", shutDown);
+function shutDown() {
+  console.log("Received kill signal, shutting down gracefully");
+  server.close(async () => {
+    console.log("Closed out remaining connections");
+    await redisClient.quit();
+    console.log("Redis client stopped");
+
+    process.exit(0);
+  });
+
+  setTimeout(() => {
+    console.error(
+      "Could not close connections in time, forcefully shutting down"
+    );
+    process.exit(1);
+  }, 10000);
+}

@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { JsonWebTokenError, JwtPayload, verify } from "jsonwebtoken";
 import { JWT_SECRET } from "../const";
-import { IUserRepository } from "../repositories";
+import { IBlacklistRepository, IUserRepository } from "../repositories";
 
 export interface AuthStatus {
   user: {
@@ -12,9 +12,9 @@ export interface AuthStatus {
 }
 
 export default class JWTMiddleware {
-  private repo: IUserRepository;
-  constructor(repo: IUserRepository) {
-    this.repo = repo;
+  private blacklistRepo: IBlacklistRepository;
+  constructor(blacklistRepo: IBlacklistRepository) {
+    this.blacklistRepo = blacklistRepo;
   }
 
   auth: RequestHandler<unknown, unknown, unknown, unknown, AuthStatus> = async (
@@ -24,9 +24,10 @@ export default class JWTMiddleware {
   ) => {
     try {
       const token = req.header("Authorization")!.replace("Bearer ", "").trim();
-      const invalidToken = await this.repo.getInvalidToken(token);
+      const invalidToken = await this.blacklistRepo.isAlreadyBlacklisted(token);
+
       if (invalidToken) {
-        throw new Error("invalid token");
+        throw new Error("token is blacklisted");
       }
 
       const { id, exp } = verify(token, JWT_SECRET) as JwtPayload;

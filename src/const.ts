@@ -27,3 +27,5 @@ export const CONTENT_SELECT: Prisma.ContentSelect = {
     select: DEFAULT_USER_SELECT,
   },
 };
+
+export const BLACKLIST_REDIS_VALUE = "1";

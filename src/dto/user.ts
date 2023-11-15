@@ -19,6 +19,10 @@ export interface ICreateUserDTO {
   password: string;
 }
 
+export interface IMessageDTO {
+  message: string;
+}
+
 export const toUserDTO = (user: IUser): IUserDTO => {
   const { id, name, registeredAt, username } = user;
   const userDTO: IUserDTO = {

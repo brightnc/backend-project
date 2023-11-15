@@ -33,14 +33,12 @@ export interface ICreateContent {
 
 export interface IToken {
   token: string;
-  expire_epoch_timestamp: bigint;
+  expire: number;
 }
 export interface IUserRepository {
   createUser(user: ICreateUserDTO): Promise<IUser>;
   findByUsername(username: string): Promise<User>;
   findById(id: string): Promise<IUser>;
-  addInvalidToken(token: IToken): Promise<IToken>;
-  getInvalidToken(token: string): Promise<IToken | null>;
 }
 
 export interface IContentRepository {
@@ -52,4 +50,9 @@ export interface IContentRepository {
     updateContent: IUpdateContentDTO
   ): Promise<IContent>;
   deleteContent(id: number): Promise<IContent>;
+}
+
+export interface IBlacklistRepository {
+  addToBlacklist(token: IToken): Promise<void>;
+  isAlreadyBlacklisted(token: string): Promise<boolean>;
 }

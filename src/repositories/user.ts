@@ -27,16 +27,4 @@ export default class UserRepository implements IUserRepository {
       where: { id },
     });
   }
-
-  addInvalidToken(token: IToken): Promise<IToken> {
-    return this.prisma.blackListToken.create({
-      data: token,
-    });
-  }
-
-  getInvalidToken(token: string): Promise<IToken | null> {
-    return this.prisma.blackListToken.findUnique({
-      where: { token },
-    });
-  }
 }

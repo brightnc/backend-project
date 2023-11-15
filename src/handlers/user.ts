@@ -1,15 +1,17 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { IUserHandler } from ".";
 import { IUserDTO, toUserDTO } from "../dto/user";
-import { IUserRepository } from "../repositories";
+import { IBlacklistRepository, IUserRepository } from "../repositories";
 import { hashPassword, verifyPassword } from "../utils/bcrypt";
 import { sign } from "jsonwebtoken";
 import { JWT_SECRET } from "../const";
 
 export default class UserHandler implements IUserHandler {
   private repo: IUserRepository;
-  constructor(repo: IUserRepository) {
+  private blacklistRepo: IBlacklistRepository;
+  constructor(repo: IUserRepository, blacklistRepo: IBlacklistRepository) {
     this.repo = repo;
+    this.blacklistRepo = blacklistRepo;
   }
 
   registration: IUserHandler["registration"] = async (req, res) => {
@@ -83,7 +85,7 @@ export default class UserHandler implements IUserHandler {
       }
       const accessToken = sign({ id }, JWT_SECRET, {
         algorithm: "HS512",
-        expiresIn: "12h",
+        expiresIn: 20,
         issuer: "learnhub-api",
         subject: "user-credential",
       });
@@ -109,13 +111,12 @@ export default class UserHandler implements IUserHandler {
   logout: IUserHandler["logout"] = async (req, res) => {
     try {
       const { token, expire } = res.locals.user;
-      const expireBigInt = BigInt(expire);
-      await this.repo.addInvalidToken({
+      await this.blacklistRepo.addToBlacklist({
         token,
-        expire_epoch_timestamp: expireBigInt,
+        expire,
       });
 
-      return res.status(200).end();
+      return res.status(200).send({ message: "You've been logged out" }).end();
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "internal server error" }).end();
