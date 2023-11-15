@@ -6,6 +6,7 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - PORT=${PORT}
       - JWT_SECRET=${JWT_SECRET}
+      - REDIS_URL=${REDIS_URL}
     ports:
       - 8080:8080
     depends_on:
@@ -15,9 +16,12 @@ services:
     environment:
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     volumes:
-      - learnhub-db-vol:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
+  cache:
+    image: redis:7.2.3
+    expose:
+      - 6379
 volumes:
-  learnhub-db-vol:
-    name: 50c0e8de7c04bbf319c182d3ef06bdde4fe4a32f60ada8d7701d62b451979d25
+  db-data:

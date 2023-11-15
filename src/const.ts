@@ -1,10 +1,14 @@
 import { Prisma } from "@prisma/client";
 
-const { JWT_SECRET: ENV_JWT_SECRET } = process.env;
+const { JWT_SECRET: ENV_JWT_SECRET, REDIS_URL: ENV_REDIS_URL } = process.env;
 if (!ENV_JWT_SECRET) {
   throw new Error("Environment variable : JWT_SECRET is not configured");
 }
 export const JWT_SECRET = ENV_JWT_SECRET;
+export let REDIS_URL = ENV_REDIS_URL;
+if (!ENV_REDIS_URL) {
+  REDIS_URL = "redis://localhost:6379";
+}
 
 export const DEFAULT_USER_SELECT: Prisma.UserSelect = {
   id: true,
