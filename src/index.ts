@@ -14,12 +14,23 @@ import ContentRepository from "./repositories/content";
 import ContentHandler from "./handlers/content";
 import { RedisClientType, createClient } from "redis";
 import BlacklistRepository from "./repositories/blacklist";
+import { REDIS_URL } from "./const";
 
 const app = express();
 const PORT = Number(process.env.PORT || 8800);
 
 const client = new PrismaClient();
-const redisClient: RedisClientType = createClient();
+const redisClient: RedisClientType = createClient({
+  url: REDIS_URL,
+});
+client
+  .$connect()
+  .then(() => redisClient.connect())
+  .catch((err) => {
+    console.log("Error :", err);
+
+    process.exit(1);
+  });
 redisClient.on("ready", function () {
   console.log("Connected to Redis server successfully");
 });
@@ -64,7 +75,6 @@ contentRouter.patch("/:id", jwtMiddleware.auth, contentHandler.updateContent);
 contentRouter.delete("/:id", jwtMiddleware.auth, contentHandler.deleteContent);
 
 const server = app.listen(PORT, () => {
-  redisClient.connect();
   console.log(`server is listening on port ${PORT}`);
 });
 
