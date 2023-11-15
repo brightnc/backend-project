@@ -8,6 +8,7 @@ RUN pnpm install && pnpm tsc
 
 FROM node:18-alpine
 ENV NODE_ENV=production
+ENV PORT=8080
 WORKDIR /app
 COPY --from=builder app/package.json /app/pnpm-lock.yaml ./
 COPY --from=builder app/dist ./dist
