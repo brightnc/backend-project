@@ -85,7 +85,7 @@ export default class UserHandler implements IUserHandler {
       }
       const accessToken = sign({ id }, JWT_SECRET, {
         algorithm: "HS512",
-        expiresIn: 20,
+        expiresIn: "12h",
         issuer: "learnhub-api",
         subject: "user-credential",
       });
